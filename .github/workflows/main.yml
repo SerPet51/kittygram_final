@@ -1,4 +1,4 @@
-name: Main Kittigram workflow
+name: Main Kittigram_final workflow
 
 on:
   push:
@@ -85,7 +85,7 @@ jobs:
           # Для каждого пересобранного образа
           # устанавливаем тег latest, чтобы потом
           # на сервере и в docker-compose.yml не указывать версию
-          tags: tetkaslepoka/kittygram_backend:latest
+          tags: tetkaslepoka/kittygram_final_backend:latest
 
   frontend_tests:
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: tetkaslepoka/kittygram_frontend:latest
+          tags: tetkaslepoka/kittygram_final_frontend:latest
 
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
@@ -150,12 +150,12 @@ jobs:
           context: ./gateway/
           push: true
           # Тут вместо username должен быть ваш логин на Docker Hub
-          tags: tetkaslepoka/kittygram_gateway:latest
+          tags: tetkaslepoka/kittygram_final_gateway:latest
 
   deploy:
     runs-on: ubuntu-latest
     needs:
-      # Дождёмся билда всех образов kittygram
+      # Дождёмся билда всех образов kittygram_final
       - build_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
@@ -172,7 +172,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         source: "docker-compose.production.yml"
-        target: "kittygram"
+        target: "kittygram_final_final"
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
@@ -184,7 +184,7 @@ jobs:
         # которые нужно выполнить на сервере,
         # с которым установлено соединение
         script: |
-          cd kittygram_final
+          cd kittygram_final_final
           # Выполняет pull образов с Docker Hub
           sudo docker compose -f docker-compose.production.yml pull
           # Перезапускает все контейнеры в Docker Compose
