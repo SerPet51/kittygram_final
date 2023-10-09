@@ -1,38 +1,37 @@
-# docker-compose.production.yml
 version: '3'
 
 volumes:
-  pg_data_kittygram_final:
-  static_kittygram_final:
-  media_kittygram_final:
+  pg_data_production:
+  static_volume:
+  media_volume:
 
 services:
   db:
+    container_name: postgre_db_prod
     image: postgres:13.10
     env_file: .env
     volumes:
-      - pg_data_kittygram_final:/var/lib/postgresql/data
+      - pg_data_production:/var/lib/postgresql/data
   backend:
-    image: tetkaslepoka/kittygram_final_backend
+    container_name: backend_prod
+    image: tetkaslepoka/kittygram_backend
     env_file: .env
     volumes:
-      - static_kittygram_final:/backend_static/
-      - media_kittygram_final:/app/media/cats/images/
-    depends_on:
-    - db
+      - static_volume:/backend_static
+      - media_volume:/media
   frontend:
-    image: tetkaslepoka/kittygram_final_frontend  # Качаем с DockerHub
+    container_name: frontend_prod
+    image: tetkaslepoka/kittygram_frontend
     env_file: .env
-    command: cp -r /app/build/. /frontend_static/
+    command: cp -r /app/build/. /static/
     volumes:
-      - static_kittygram_final:/frontend_static
+      - static_volume:/static
   gateway:
-    image: tetkaslepoka/kittygram_final_gateway  # Качаем с DockerHub
-    # env_file: .env
+    container_name: nginx_prod
+    image: tetkaslepoka/kittygram_gateway
+    env_file: .env
     volumes:
-      - static_kittygram_final:/staticfiles/
-      - media_kittygram_final:/media/cats/images/
+      - static_volume:/static/
+      - media_volume:/media
     ports:
       - 9000:80
-    depends_on:
-      - backend
