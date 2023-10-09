@@ -2,36 +2,36 @@
 version: '3'
 
 volumes:
-  pg_data_kitty_production:
-  static_kitty_production:
-  media_kitty_production:
+  pg_data_kittygram_final:
+  static_kittygram_final:
+  media_kittygram_final:
 
 services:
   db:
     image: postgres:13.10
     env_file: .env
     volumes:
-      - pg_data_kittygram:/var/lib/postgresql/data
+      - pg_data_kittygram_final:/var/lib/postgresql/data
   backend:
-    image: tetkaslepoka/kittygram_backend
+    image: tetkaslepoka/kittygram_final_backend
     env_file: .env
     volumes:
-      - static_kittygram:/backend_static/
-      - media_kittygram:/app/media/cats/images/
+      - static_kittygram_final:/backend_static/
+      - media_kittygram_final:/app/media/cats/images/
     depends_on:
     - db
   frontend:
-    image: tetkaslepoka/kittygram_frontend  # Качаем с DockerHub
+    image: tetkaslepoka/kittygram_final_frontend  # Качаем с DockerHub
     env_file: .env
     command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static_kittygram:/frontend_static
+      - static_kittygram_final:/frontend_static
   gateway:
-    image: tetkaslepoka/kittygram_gateway  # Качаем с DockerHub
+    image: tetkaslepoka/kittygram_final_gateway  # Качаем с DockerHub
     # env_file: .env
     volumes:
-      - static_kittygram:/staticfiles/
-      - media_kittygram:/media/cats/images/
+      - static_kittygram_final:/staticfiles/
+      - media_kittygram_final:/media/cats/images/
     ports:
       - 9000:80
     depends_on:
