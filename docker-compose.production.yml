@@ -16,8 +16,8 @@ services:
     image: tetkaslepoka/kittygram_backend
     env_file: .env
     volumes:
-      - static_kitty_production:/backend_static/
-      - media_kitty_production:/app/media/cats/images/
+      - static_kittygram:/backend_static/
+      - media_kittygram:/app/media/cats/images/
     depends_on:
     - db
   frontend:
@@ -25,7 +25,7 @@ services:
     env_file: .env
     command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static_kitty_production:/frontend_static
+      - static_kittygram:/frontend_static
   gateway:
     image: tetkaslepoka/kittygram_gateway  # Качаем с DockerHub
     # env_file: .env
