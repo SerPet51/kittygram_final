@@ -1,4 +1,4 @@
-name: Main kittygram_final workflow
+name: Main kittygram workflow
 
 on: push
 
@@ -143,7 +143,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          cd kittygram
+          cd kittygram_final
           # Выполняет pull образов с DockerHub
           sudo docker compose -f docker-compose.production.yml pull
           # Перезапускает все контейнеры в docker compose
@@ -151,7 +151,7 @@ jobs:
           sudo docker compose -f docker-compose.production.yml up -d
           # Выполняет миграции и сбор статики
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
-          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic  --noinput
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --noinput
           sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
   send_message:
     runs-on: ubuntu-latest
